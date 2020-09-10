@@ -25,14 +25,34 @@ class MainActivity : AppCompatActivity() {
 /*            CoroutineScope(Dispatchers.IO).launch {
                 downloadUserData()
             }*/
-            CoroutineScope(Main).launch {
+    /*        CoroutineScope(IO).launch {
                 Log.i("MyTag", "Calculation started..")
-                val stock1 = async(IO) { getStock1() }
-                val stock2 = async(IO) { getStock2() }
+                val stock1 = async(start = CoroutineStart.LAZY) { getStock1() }
+                val stock2 = async(start = CoroutineStart.LAZY) { getStock2() }
+                delay(4000)
+                Log.i("MyTag", "*** Just Before await ***")
                 val total = stock1.await()+ stock2.await()
                 Log.i("MyTag", "Total is $total")
-                Toast.makeText(applicationContext,"Total is $total",Toast.LENGTH_SHORT).show()
+            }*/
+
+            CoroutineScope(Main).launch {
+                withTimeout(3000){
+                    withContext(IO){
+                        for(i in 1..10000){
+                            delay(100)
+                            Log.i("MyTag", "is $i")
+                        }
+                    }
+                }
             }
+            Log.i("MyTag", "Start")
+            runBlocking {
+                for(i in 1..10){
+                    delay(100)
+                    Log.i("MyTag", "$i")
+                }
+            }
+            Log.i("MyTag", "End")
         }
 
     }
@@ -47,13 +67,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun getStock1(): Int {
-        delay(10000)
+        Log.i("MyTag", "Counting stock 1 started")
+        delay(2000)
         Log.i("MyTag", "stock 1 returned ")
         return 55000
     }
 
     private suspend fun getStock2(): Int {
-        delay(8000)
+        Log.i("MyTag", "Counting stock 2 started")
+        delay(1000)
         Log.i("MyTag", "stock 2 returned ")
         return 35000
     }
