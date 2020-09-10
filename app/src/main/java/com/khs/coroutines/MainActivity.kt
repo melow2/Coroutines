@@ -11,7 +11,9 @@ import kotlinx.coroutines.Dispatchers.Main
 
 class MainActivity : AppCompatActivity() {
     private var count = 0
-
+    private lateinit var job1:Job
+    lateinit var deferred1:Deferred<Int>
+    var returnedValue :Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
                 Log.i("MyTag", "Total is $total")
             }*/
 
-            CoroutineScope(Main).launch {
+/*            CoroutineScope(Main).launch {
                 withTimeout(3000){
                     withContext(IO){
                         for(i in 1..10000){
@@ -44,17 +46,57 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
-            Log.i("MyTag", "Start")
+            }*/
+
+/*            Log.i("MyTag", "Start")
             runBlocking {
                 for(i in 1..10){
                     delay(100)
                     Log.i("MyTag", "$i")
                 }
             }
-            Log.i("MyTag", "End")
+            Log.i("MyTag", "End")*/
+
+            job1 = CoroutineScope(Main).launch {
+                tvUserMessage.text = UserDataManager().getTotalUserCount().toString()
+            }
+
         }
 
+/*        btn_cancel.setOnClickListener {
+            job1.cancel()
+        }
+
+        btn_status.setOnClickListener {
+            if(deferred1.isActive){
+                Toast.makeText(applicationContext,"Active",Toast.LENGTH_SHORT).show()
+            }else if(deferred1.isCancelled){
+                Toast.makeText(applicationContext,"Canceled",Toast.LENGTH_SHORT).show()
+            }else if(deferred1.isCompleted){
+                Toast.makeText(applicationContext,"Completed",Toast.LENGTH_SHORT).show()
+            }
+        }*/
+    }
+
+    private suspend fun downloadData(){
+        withContext(IO){
+            repeat(30){
+                delay(100)
+                Log.i("MyTag","repeating $it")
+            }
+        }
+    }
+
+    private suspend fun downloadData2(): Int {
+        var i = 0
+        withContext(IO){
+            repeat(30){
+                delay(1000)
+                Log.i("MyTag","repeating $it")
+                i++
+            }
+        }
+        return i
     }
 
     private suspend fun downloadUserData() {
