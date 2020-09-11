@@ -61,12 +61,6 @@ class MainActivity : AppCompatActivity() {
                 tvUserMessage.text = UserDataManager().getTotalUserCount().toString()
             }*/
 
-            CoroutineScope(Main).launch {
-                Log.i("MyTag","Coroutine launched from ${Thread.currentThread().name}")
-                DemoClass().test1()
-                Log.i("MyTag","Came back to MainActivity ${Thread.currentThread().name}")
-            }
-
         }
 
 /*        btn_cancel.setOnClickListener {
